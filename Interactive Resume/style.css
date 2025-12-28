@@ -1,0 +1,116 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* BODY */
+body {
+  background: radial-gradient(circle at top, #020617, #000);
+  font-family: "JetBrains Mono", monospace;
+  color: #22c55e;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* TERMINAL CONTAINER */
+.terminal {
+  padding: 30px;
+  height: 100vh;
+  overflow-y: auto;
+  animation: fadeIn 1.5s ease;
+}
+
+/* FADE ANIMATION */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* PROMPT */
+.prompt {
+  color: #22c55e;
+  text-shadow: 0 0 6px #22c55e;
+  margin-right: 8px;
+}
+
+/* INPUT LINE */
+.input-line {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+/* INPUT */
+input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #22c55e;
+  font-size: 16px;
+  width: 80%;
+  caret-color: #22c55e;
+}
+
+/* SCROLLBAR */
+.terminal::-webkit-scrollbar {
+  width: 6px;
+}
+.terminal::-webkit-scrollbar-thumb {
+  background: #22c55e55;
+  border-radius: 10px;
+}
+
+/* POPUP CONTAINER */
+.popup {
+  position: fixed;
+  top: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 65%;
+  max-width: 700px;
+
+  background: rgba(2, 6, 23, 0.85);
+  backdrop-filter: blur(12px);
+
+  border: 1px solid #22c55e88;
+  border-radius: 12px;
+
+  padding: 25px;
+  box-shadow: 0 0 30px #22c55e44;
+  animation: popupIn 0.4s ease;
+  z-index: 1000;
+}
+
+@keyframes popupIn {
+  from { opacity: 0; transform: translate(-50%, -20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* POPUP TEXT */
+.popup h3 {
+  color: #38bdf8;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+.popup ul {
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+/* CLOSE BUTTON */
+.close-btn {
+  float: right;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .popup {
+    width: 90%;
+  }
+}
