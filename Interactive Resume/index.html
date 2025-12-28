@@ -7,16 +7,27 @@
 </head>
 <body>
 
-<div class="terminal">
+<!-- INTRO PAGE -->
+<div id="intro" class="center-container">
+  <h1 id="typing-text"></h1>
+  <p id="about-float">
+    Engineering undergraduate in Computer Engineering at NMIMS Navi Mumbai,
+    passionate about Cyber Security, automation, and web development.
+  </p>
+</div>
+
+<!-- MAIN PAGE -->
+<div id="main" class="terminal hidden">
+  <h2>Command Panel</h2>
+  <p>Type a command below (try <b>help</b>)</p>
+
   <div id="output"></div>
 
   <div class="input-line">
-    <span class="prompt">aayushi@portfolio:~$</span>
+    <span>$</span>
     <input type="text" id="commandInput" autofocus />
   </div>
 </div>
-
-<div id="popup-container"></div>
 
 <script src="script.js"></script>
 </body>
