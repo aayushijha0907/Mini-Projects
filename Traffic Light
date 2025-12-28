@@ -1,0 +1,50 @@
+// C++ code
+// DENSITY BASED TRAFFIC LIGHT SYSTEM 
+// Pin setup
+int redLed = 11;
+int yellowLed = 10;
+int greenLed = 9;
+int irSensor = 2;
+
+void setup() {
+  pinMode(redLed, OUTPUT);
+  pinMode(yellowLed, OUTPUT);
+  pinMode(greenLed, OUTPUT);
+  pinMode(irSensor, INPUT);
+
+  digitalWrite(redLed, HIGH); // Start with red light ON
+  digitalWrite(yellowLed, LOW);
+  digitalWrite(greenLed, LOW);
+
+  Serial.begin(9600); // for debugging
+}
+
+void loop() {
+  int sensorValue = digitalRead(irSensor); // Read IR sensor signal
+
+  if (sensorValue == LOW) {
+    // IR sensor detects an object (car)
+    Serial.println("Vehicle detected!");
+
+    digitalWrite(redLed, LOW);
+    digitalWrite(greenLed, HIGH);
+    delay(5000); // Green for 5 seconds
+
+    digitalWrite(greenLed, LOW);
+    digitalWrite(yellowLed, HIGH);
+    delay(2000); // Yellow for 2 seconds
+
+    digitalWrite(yellowLed, LOW);
+    digitalWrite(redLed, HIGH);
+  } 
+  else {
+    // No vehicle
+    Serial.println("No vehicle.");
+    digitalWrite(redLed, HIGH);
+    digitalWrite(yellowLed, LOW);
+    digitalWrite(greenLed, LOW);
+  }
+
+  delay(200);
+}
+
