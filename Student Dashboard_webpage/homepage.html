@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="homepage_style.css">
+</head>
+
+<body>
+
+<script src="homepage.js"></script>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>Portal</h2>
+  <button onclick="scrollToSection('profile')">Profile</button>
+  <button onclick="scrollToSection('assignments')">Assignments</button>
+  <button onclick="scrollToSection('attendance')">Attendance</button>
+  <button onclick="scrollToSection('faculty')">Faculty</button>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<header class="header">
+  <div>
+    <h1>NMIMS Deemed to be University</h1><br> Plot No. 2, near Pethpada Metro Station, Pethapada, Sector 33, Kharghar, Panvel, Maharashtra 410210
+    <p>Kharghar, Navi Mumbai Campus</p>
+  </div>
+  <img src="nmims.webp" class="logo" height="100" width="200">
+</header>
+
+<!-- PROFILE -->
+<div class="card" id="profile">
+  <h2>Profile</h2>
+  <img src="unknown.jpg" class="profile-pic">
+  <p id="Username"></p>
+  <p>Course: BTech CE</p>
+</div>
+
+<div id="smartWarn" style="
+  background:#fff3cd;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:15px;
+  font-weight:bold;
+">
+</div>
+
+<!-- ASSIGNMENTS -->
+<div class="card" id="assignments">
+  <h2>Assignment Tracker</h2>
+
+  <input type="text" id="assignName" placeholder="Assignment">
+  <input type="date" id="assignDate">
+  <button class="btn" onclick="addAssignment()">Add</button>
+
+  <ul id="assignList"></ul>
+</div>
+
+<!-- ATTENDANCE -->
+<div class="card" id="attendance">
+  <h2>Attendance</h2>
+
+  <!-- Maths -->
+  <p>Maths (<span id="mPer">0%</span>)</p>
+  <input type="number" id="mT" placeholder="Total" oninput="updateAll()">
+  <input type="number" id="mA" placeholder="Attended" oninput="updateAll()">
+  <div class="progress"><div id="mBar" class="bar"></div></div>
+
+  <!-- Physics -->
+  <p>Physics (<span id="pPer">0%</span>)</p>
+  <input type="number" id="pT" placeholder="Total" oninput="updateAll()">
+  <input type="number" id="pA" placeholder="Attended" oninput="updateAll()">
+  <div class="progress"><div id="pBar" class="bar"></div></div>
+
+  <!-- Programming -->
+  <p>Programming (<span id="cPer">0%</span>)</p>
+  <input type="number" id="cT" placeholder="Total" oninput="updateAll()">
+  <input type="number" id="cA" placeholder="Attended" oninput="updateAll()">
+  <div class="progress"><div id="cBar" class="bar"></div></div>
+
+  <!-- Web Dev -->
+  <p>Web Dev (<span id="wPer">0%</span>)</p>
+  <input type="number" id="wT" placeholder="Total" oninput="updateAll()">
+  <input type="number" id="wA" placeholder="Attended" oninput="updateAll()">
+  <div class="progress"><div id="wBar" class="bar"></div></div>
+
+  <button class="btn" onclick="check()">Check Eligibility</button>
+
+  <p id="result"></p>
+</div>
+
+<!-- FACULTY -->
+<div class="card" id="faculty">
+  <h2>Faculty</h2>
+  <p>Maths: Sameeta Saraf Ma'am</p>
+  <p>Physics: Padmashri Patil Ma'am</p>
+  <p>Programming: Omkar Joshi Sir</p>
+  <p>Web Dev: Archana Gulati Ma'am</p>
+</div>
+
+</div>
+
+</body>
+</html>

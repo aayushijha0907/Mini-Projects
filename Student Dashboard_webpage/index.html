@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="index_style.css">
+</head>
+
+<body>
+
+<script>
+  if (!localStorage.getItem("loggedIn")) {
+    alert("Login first!");
+    window.location.href = "login.html";
+  }
+</script>
+
+<div class="sidebar">
+  <h2>Portal</h2>
+  <button onclick="scrollToSection('profile')">Profile</button>
+  <button onclick="scrollToSection('assignments')">Assignments</button>
+  <button onclick="scrollToSection('attendance')">Attendance</button>
+  <button onclick="scrollToSection('marks')">Marks</button>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<div class="main">
+
+<header class="header">
+  <h1>NMIMS Student Dashboard</h1>
+</header>
+
+<!-- PROFILE -->
+<div class="card" id="profile">
+  <h2>Profile</h2>
+  <p id="Username"></p>
+  <p>Course: BTech CSE</p>
+</div>
+
+<div class="card" id="assignments">
+  <h2>Assignments</h2>
+
+  <input type="text" id="assignName" placeholder="Assignment Name" onkeypress="handleKey(event)">
+  <input type="date" id="assignDate" onchange="addAssignment()">
+
+  <h3>Upcoming</h3>
+  <p>QP-Assignment 4 QnA<br>LADE- Ch3<br>Web Dev - Mini Project</p>
+  <ul id="assignList"></ul>
+
+  <h3>Past / Overdue</h3>
+  <ul id="pastList"></ul>
+<p>Web Dev- Exp 7<br>LADE - Exp 7 <br>OOP -Assignment </p>
+
+<!-- ATTENDANCE -->
+<div class="card" id="attendance">
+  <h2>Attendance</h2>
+
+  <!-- Maths -->
+  <p>Maths (<span id="mPer">0%</span>)</p>
+  <input id="mT" type="number" placeholder="Total" oninput="updateAll()">
+  <input id="mA" type="number" placeholder="Attended" oninput="updateAll()">
+  <div class="progress"><div id="mBar" class="bar"></div></div>
+
+  <!-- Physics -->
+  <p>Physics (<span id="pPer">0%</span>)</p>
+  <input id="pT" type="number" placeholder="Total" oninput="updateAll()">
+  <input id="pA" type="number" placeholder="Attended" oninput="updateAll()">
+  <div class="progress"><div id="pBar" class="bar"></div></div>
+
+  <!-- Programming -->
+  <p>Programming (<span id="cPer">0%</span>)</p>
+  <input id="cT" type="number" placeholder="Total" oninput="updateAll()">
+  <input id="cA" type="number" placeholder="Attended" oninput="updateAll()">
+  <div class="progress"><div id="cBar" class="bar"></div></div>
+
+  <!-- Web Dev -->
+  <p>Web Dev (<span id="wPer">0%</span>)</p>
+  <input id="wT" type="number" placeholder="Total" oninput="updateAll()">
+  <input id="wA" type="number" placeholder="Attended" oninput="updateAll()">
+  <div class="progress"><div id="wBar" class="bar"></div></div>
+
+  <button onclick="check()">Check Eligibility</button>
+  <p id="result"></p>
+</div>
+
+<!-- MARKS -->
+<div class="card" id="marks">
+  <h2>Marks Overview</h2>
+  <canvas id="marksChart"></canvas>
+</div>
+
+</div>
+
+<script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</body>
+</html>
