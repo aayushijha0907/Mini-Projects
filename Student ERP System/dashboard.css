@@ -1,0 +1,149 @@
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f4f6f9;
+}
+
+.container {
+  display: flex;
+}
+
+.sidebar {
+  width: 220px;
+  background: #1e2a38;
+  color: white;
+  height: 100vh;
+  padding: 20px;
+}
+
+.sidebar button {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  background: #2c3e50;
+  color: white;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.sidebar button:hover {
+  background: #1abc9c;
+}
+
+.main {
+  flex: 1;
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+}
+
+.profile img {
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+/* Flashing assignments */
+.assignment p {
+  animation: blink 1s infinite;
+  color: red;
+}
+
+.assignment-list li {
+  font-weight: bold;
+}
+
+/* URGENT (RED FAST FLASH) */
+.urgent {
+  color: red;
+  animation: blinkFast 0.7s infinite;
+}
+
+/* WARNING (ORANGE SLOW FLASH) */
+.warning {
+  color: orange;
+  animation: blinkSlow 1.5s infinite;
+}
+
+@keyframes blinkFast {
+  0% {opacity: 1;}
+  50% {opacity: 0.2;}
+  100% {opacity: 1;}
+}
+
+@keyframes blinkSlow {
+  0% {opacity: 1;}
+  50% {opacity: 0.5;}
+  100% {opacity: 1;}
+}
+
+/* Search box */
+#searchBox {
+  padding: 10px;
+  width: 60%;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* Base list */
+#assignmentList li {
+  padding: 8px;
+  font-weight: bold;
+}
+
+/* URGENT (<=2 days) */
+.urgent {
+  color: red;
+  animation: blinkFast 0.7s infinite;
+}
+
+/* WARNING (<=5 days) */
+.warning {
+  color: orange;
+  animation: blinkSlow 1.5s infinite;
+}
+
+@keyframes blinkFast {
+  0% {opacity: 1;}
+  50% {opacity: 0.2;}
+  100% {opacity: 1;}
+}
+
+@keyframes blinkSlow {
+  0% {opacity: 1;}
+  50% {opacity: 0.5;}
+  100% {opacity: 1;}
+}
+
+#assignmentList li {
+  color: red;
+  font-weight: bold;
+  animation: flash 1s infinite;
+}
+
+@keyframes flash {
+  0% {opacity: 1;}
+  50% {opacity: 0.2;}
+  100% {opacity: 1;}
+}
+
+@keyframes blink {
+  0% {opacity: 1;}
+  50% {opacity: 0.3;}
+  100% {opacity: 1;}
+}
+
+.hidden {
+  display: none;
+}

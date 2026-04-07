@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      background: #eef2f7;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 230px;
+      background: #1e2a38;
+      color: white;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar button {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: none;
+      background: #2c3e50;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .sidebar button:hover {
+      background: #1abc9c;
+    }
+
+    /* MAIN */
+    .main {
+      flex: 1;
+      padding: 20px;
+      overflow-y: scroll;
+      height: 100vh;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    /* PROFILE */
+    .profile {
+      display: flex;
+      align-items: center;
+    }
+
+    .profile img {
+      width: 110px;
+      border-radius: 50%;
+      margin-right: 20px;
+    }
+
+    /* INPUTS */
+    input {
+      padding: 8px;
+      margin: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button.action {
+      padding: 8px 12px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* ✅ ONLY ASSIGNMENTS FLASH */
+    #assignmentList li {
+      color: red;
+      font-weight: bold;
+      animation: flash 1s infinite;
+    }
+
+    @keyframes flash {
+      0% {opacity: 1;}
+      50% {opacity: 0.3;}
+      100% {opacity: 1;}
+    }
+
+    /* ATTENDANCE BAR */
+    .bar {
+      width: 100%;
+      height: 18px;
+      background: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .bar div {
+      height: 100%;
+      width: 0%;
+      transition: 0.5s;
+    }
+
+    .subject {
+      margin-bottom: 15px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>Student Portal</h2>
+  <button onclick="scrollToSection('profile')">Profile</button>
+  <button onclick="scrollToSection('attendance')">Attendance</button>
+  <button onclick="scrollToSection('assignments')">Assignments</button>
+  <button onclick="scrollToSection('faculty')">Faculty</button>
+  <button onclick="scrollToSection('marks')">Performance</button>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<h1>Dashboard</h1>
+
+<!-- PROFILE -->
+<div id="profile" class="card">
+  <h2>Student Profile</h2>
+  <div class="profile">
+    <img src="unknown.jpg">
+    <div>
+      <h3 id="username"></h3>
+      <p>College and Campus : NMIMS Navi Mumbai</p>
+      <p>Address : Kharghar, Maharashtra</p>
+      <p>Father's Name: Father<br><br>Mother's Name: Mother<br><br>Blood Group: A+</p>
+    </div>
+  </div>
+</div>
+
+<!-- ATTENDANCE -->
+<div id="attendance" class="card">
+  <h2>Attendance Tracker</h2>
+
+  <div class="subject">
+    <h3>LADE</h3>
+    <input id="dsa_total" placeholder="Total">
+    <input id="dsa_attended" placeholder="Attended">
+    <button class="action" onclick="calc('dsa')">Calc</button>
+    <p id="dsa_text"></p>
+    <div class="bar"><div id="dsa_bar"></div></div>
+  </div>
+
+  <div class="subject">
+    <h3>QP</h3>
+    <input id="math_total" placeholder="Total">
+    <input id="math_attended" placeholder="Attended">
+    <button class="action" onclick="calc('math')">Calc</button>
+    <p id="math_text"></p>
+    <div class="bar"><div id="math_bar"></div></div>
+  </div>
+
+  <div class="subject">
+    <h3>OOP</h3>
+    <input id="dbms_total" placeholder="Total">
+    <input id="dbms_attended" placeholder="Attended">
+    <button class="action" onclick="calc('dbms')">Calc</button>
+    <p id="dbms_text"></p>
+    <div class="bar"><div id="dbms_bar"></div></div>
+  </div>
+
+  <div class="subject">
+    <h3>Web Dev</h3>
+    <input id="web_total" placeholder="Total">
+    <input id="web_attended" placeholder="Attended">
+    <button class="action" onclick="calc('web')">Calc</button>
+    <p id="web_text"></p>
+    <div class="bar"><div id="web_bar"></div></div>
+  </div>
+
+</div>
+
+<!-- ASSIGNMENTS -->
+<div id="assignments" class="card">
+  <h2>Assignments</h2>
+
+  <input type="text" id="searchBox" placeholder="Search assignment...">
+  <button onclick="searchAssignment()">Search</button>
+
+  <ul id="assignmentList">
+    <li>LADE Assignment - Due: 10 April</li>
+    <li>QP Assignment - Due: 12 April</li>
+    <li>OOP Assignment - Due: 15 April</li>
+    <li>Web Dev Assignment - Due: 18 April</li>
+  </ul>
+</div>
+
+<!-- FACULTY -->
+<div id="faculty" class="card">
+  <h2>Faculty</h2>
+  <ul>
+    <li>LADE - Prof. Sameeta Saraf</li>
+    <li>QP - Prof. Padmashri Patil</li>
+    <li>OOP - Prof. Omkar Joshi</li>
+    <li>Web Dev - Prof. Archana Gulati</li>
+  </ul>
+</div>
+
+<!-- GRAPH -->
+<div id="marks" class="card">
+  <h2>Performance Analytics</h2>
+  <canvas id="chart"></canvas>
+</div>
+
+</div>
+
+<script>
+
+// USERNAME
+document.getElementById("username").innerText =
+  "Welcome, " + (localStorage.getItem("user") || "Student");
+
+// SCROLL
+function scrollToSection(id){
+  document.getElementById(id).scrollIntoView({behavior:"smooth"});
+}
+
+// LOGOUT
+function logout(){
+  localStorage.clear();
+  window.location.href="login.html";
+}
+
+// SEARCH
+function searchAssignment() {
+  let input = document.getElementById("searchBox").value.toLowerCase();
+  let items = document.querySelectorAll("#assignmentList li");
+
+  items.forEach(item => {
+    let text = item.innerText.toLowerCase();
+    item.style.display = text.includes(input) ? "list-item" : "none";
+  });
+}
+
+// ATTENDANCE
+function calc(sub){
+  let total = document.getElementById(sub+"_total").value;
+  let att = document.getElementById(sub+"_attended").value;
+
+  if(total==0 || total==""){
+    alert("Invalid");
+    return;
+  }
+
+  let p = (att/total)*100;
+  p = p.toFixed(1);
+
+  let bar = document.getElementById(sub+"_bar");
+  bar.style.width = p+"%";
+
+  if(p>=80) bar.style.background="green";
+  else if(p>=60) bar.style.background="orange";
+  else bar.style.background="red";
+
+  document.getElementById(sub+"_text").innerText = p+"%";
+}
+
+// CHART
+window.onload = function(){
+  new Chart(document.getElementById("chart"),{
+    type:"bar",
+    data:{
+      labels:["LADE","QP","OOP","Web Dev"],
+      datasets:[{
+        label:"Marks",
+        data:[80,65,90,100],
+        backgroundColor:["#3498db","#e74c3c","#2ecc71","#9b59b6"]
+      }]
+    }
+  });
+};
+
+</script>
+
+</body>
+</html>
