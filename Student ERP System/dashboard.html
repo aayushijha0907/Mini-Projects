@@ -3,6 +3,7 @@
 <head>
   <title>Student Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     body {
@@ -19,6 +20,7 @@
       color: white;
       height: 100vh;
       padding: 20px;
+      position: fixed; /* Keeps sidebar fixed while scrolling */
     }
 
     .sidebar h2 {
@@ -36,7 +38,10 @@
       border-radius: 8px;
       cursor: pointer;
       transition: 0.3s;
+      text-align: left;
     }
+
+    .sidebar button i { margin-right: 10px; width: 20px; }
 
     .sidebar button:hover {
       background: #1abc9c;
@@ -46,118 +51,102 @@
     .main {
       flex: 1;
       padding: 20px;
-      overflow-y: scroll;
+      margin-left: 270px; /* Offset for the fixed sidebar */
       height: 100vh;
+      overflow-y: auto;
     }
 
     .card {
       background: white;
-      padding: 20px;
-      margin-bottom: 20px;
+      padding: 25px;
+      margin-bottom: 25px;
       border-radius: 15px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
     /* PROFILE */
-    .profile {
-      display: flex;
-      align-items: center;
-    }
+    .profile { display: flex; align-items: center; }
+    .profile img { width: 110px; border-radius: 50%; margin-right: 20px; }
 
-    .profile img {
-      width: 110px;
-      border-radius: 50%;
-      margin-right: 20px;
-    }
+    /* INPUTS & BUTTONS */
+    input { padding: 8px; margin: 5px; border-radius: 6px; border: 1px solid #ccc; }
+    button.action { padding: 8px 12px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; }
 
-    /* INPUTS */
-    input {
-      padding: 8px;
-      margin: 5px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    button.action {
-      padding: 8px 12px;
-      background: #3498db;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    /* ✅ ONLY ASSIGNMENTS FLASH */
-    #assignmentList li {
-      color: red;
-      font-weight: bold;
-      animation: flash 1s infinite;
-    }
-
-    @keyframes flash {
-      0% {opacity: 1;}
-      50% {opacity: 0.3;}
-      100% {opacity: 1;}
-    }
+    /* ASSIGNMENTS FLASH */
+    #assignmentList li { color: red; font-weight: bold; animation: flash 1s infinite; margin-bottom: 8px; }
+    @keyframes flash { 0% {opacity: 1;} 50% {opacity: 0.3;} 100% {opacity: 1;} }
 
     /* ATTENDANCE BAR */
-    .bar {
-      width: 100%;
-      height: 18px;
-      background: #ddd;
-      border-radius: 10px;
-      overflow: hidden;
-    }
+    .bar { width: 100%; height: 18px; background: #ddd; border-radius: 10px; overflow: hidden; margin-top: 5px; }
+    .bar div { height: 100%; width: 0%; transition: 0.5s; }
+    .subject { margin-bottom: 15px; }
 
-    .bar div {
-      height: 100%;
-      width: 0%;
-      transition: 0.5s;
+    /* NEW FEATURES STYLING */
+    .news-item {
+        border-left: 4px solid #1abc9c;
+        background: #f9f9f9;
+        padding: 12px;
+        margin-bottom: 10px;
+        border-radius: 0 8px 8px 0;
     }
-
-    .subject {
-      margin-bottom: 15px;
+    .flex-stats { display: flex; gap: 15px; margin-top: 15px; }
+    .stat-box { 
+        flex: 1; padding: 15px; border-radius: 10px; text-align: center; 
+        background: #f1f5f9; border: 1px solid #e2e8f0;
     }
-
+    .pay-btn {
+        width: 100%; padding: 12px; background: #6366f1; color: white;
+        border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px;
+    }
   </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
 <div class="sidebar">
   <h2>Student Portal</h2>
-  <button onclick="scrollToSection('profile')">Profile</button>
-  <button onclick="scrollToSection('attendance')">Attendance</button>
-  <button onclick="scrollToSection('assignments')">Assignments</button>
-  <button onclick="scrollToSection('faculty')">Faculty</button>
-  <button onclick="scrollToSection('marks')">Performance</button>
-  <button onclick="logout()">Logout</button>
+  <button onclick="scrollToSection('profile')"><i class="fas fa-user"></i> Profile</button>
+  <button onclick="scrollToSection('news')"><i class="fas fa-newspaper"></i> News</button>
+  <button onclick="scrollToSection('attendance')"><i class="fas fa-check-circle"></i> Attendance</button>
+  <button onclick="scrollToSection('assignments')"><i class="fas fa-tasks"></i> Assignments</button>
+  <button onclick="scrollToSection('library')"><i class="fas fa-book"></i> Library</button>
+  <button onclick="scrollToSection('fees')"><i class="fas fa-wallet"></i> Fees</button>
+  <button onclick="scrollToSection('faculty')"><i class="fas fa-chalkboard-teacher"></i> Faculty</button>
+  <button onclick="scrollToSection('marks')"><i class="fas fa-chart-line"></i> Performance</button>
+  <button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
 </div>
 
-<!-- MAIN -->
 <div class="main">
 
-<h1>Dashboard</h1>
+<h1>Dashboard Overview</h1>
 
-<!-- PROFILE -->
 <div id="profile" class="card">
   <h2>Student Profile</h2>
   <div class="profile">
-    <img src="unknown.jpg">
+    <img src="unknown.jpg" alt="Student">
     <div>
       <h3 id="username"></h3>
-      <p>College and Campus : NMIMS Navi Mumbai</p>
-      <p>Address : Kharghar, Maharashtra</p>
-      <p>Father's Name: Father<br><br>Mother's Name: Mother<br><br>Blood Group: A+</p>
+      <p><strong>College:</strong> NMIMS Navi Mumbai</p>
+      <p><strong>Address:</strong> Kharghar, Maharashtra</p>
+      <p><strong>Blood Group:</strong> A+</p>
     </div>
   </div>
 </div>
 
-<!-- ATTENDANCE -->
-<div id="attendance" class="card">
-  <h2>Attendance Tracker</h2>
+<div id="news" class="card">
+    <h2><i class="fas fa-bullhorn"></i> Campus News & Club Updates</h2>
+    <div class="news-item">
+        <strong>Annual Sports Meet 2026</strong>
+        <p style="font-size: 0.9rem; color: #555;">Scheduled for April 25th. Register now at the Sports Complex.</p>
+    </div>
+    <div class="news-item" style="border-left-color: #3498db;">
+        <strong>Tech-Fest Registration</strong>
+        <p style="font-size: 0.9rem; color: #555;">Coding club is organizing a 24-hour hackathon this weekend.</p>
+    </div>
+</div>
 
+<div id="attendance" class="card">
+  <h2>Attendance </h2>
   <div class="subject">
     <h3>LADE</h3>
     <input id="dsa_total" placeholder="Total">
@@ -185,25 +174,22 @@
     <div class="bar"><div id="dbms_bar"></div></div>
   </div>
 
+  
   <div class="subject">
-    <h3>Web Dev</h3>
-    <input id="web_total" placeholder="Total">
-    <input id="web_attended" placeholder="Attended">
-    <button class="action" onclick="calc('web')">Calc</button>
-    <p id="web_text"></p>
-    <div class="bar"><div id="web_bar"></div></div>
+    <h3>WD</h3>
+    <input id="dbms_total" placeholder="Total">
+    <input id="dbms_attended" placeholder="Attended">
+    <button class="action" onclick="calc('dbms')">Calc</button>
+    <p id="dbms_text"></p>
+    <div class="bar"><div id="dbms_bar"></div></div>
   </div>
-
 </div>
 
-<!-- ASSIGNMENTS -->
 <div id="assignments" class="card">
   <h2>Assignments</h2>
-
   <input type="text" id="searchBox" placeholder="Search assignment...">
-  <button onclick="searchAssignment()">Search</button>
-
-  <ul id="assignmentList">
+  <button class="action" onclick="searchAssignment()">Search</button>
+  <ul id="assignmentList" style="margin-top: 15px;">
     <li>LADE Assignment - Due: 10 April</li>
     <li>QP Assignment - Due: 12 April</li>
     <li>OOP Assignment - Due: 15 April</li>
@@ -211,9 +197,32 @@
   </ul>
 </div>
 
-<!-- FACULTY -->
+<div id="section-library" id="library" class="card">
+    <div id="library"> <h2><i class="fas fa-book-reader"></i> Library Status</h2>
+        <div class="flex-stats">
+            <div class="stat-box" style="color: #e74c3c;">
+                <h1 style="margin:0;">02</h1>
+                <span>Books Overdue</span>
+            </div>
+            <div class="stat-box">
+                <h1 style="margin:0;">05</h1>
+                <span>Issued Books</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="fees" class="card">
+    <h2><i class="fas fa-credit-card"></i> Fee Management</h2>
+    <div class="stat-box" style="background: #f0fdf4; border-color: #bbf7d0;">
+        <p style="margin:0; color: #166534;">Pending Balance</p>
+        <h1 style="margin: 10px 0; color: #14532d;">₹4,500</h1>
+        <button class="pay-btn" onclick="alert('Redirecting to Payment Gateway...')">Pay Securely Now</button>
+    </div>
+</div>
+
 <div id="faculty" class="card">
-  <h2>Faculty</h2>
+  <h2>Faculty Contact</h2>
   <ul>
     <li>LADE - Prof. Sameeta Saraf</li>
     <li>QP - Prof. Padmashri Patil</li>
@@ -222,7 +231,6 @@
   </ul>
 </div>
 
-<!-- GRAPH -->
 <div id="marks" class="card">
   <h2>Performance Analytics</h2>
   <canvas id="chart"></canvas>
@@ -231,7 +239,6 @@
 </div>
 
 <script>
-
 // USERNAME
 document.getElementById("username").innerText =
   "Welcome, " + (localStorage.getItem("user") || "Student");
@@ -251,33 +258,27 @@ function logout(){
 function searchAssignment() {
   let input = document.getElementById("searchBox").value.toLowerCase();
   let items = document.querySelectorAll("#assignmentList li");
-
   items.forEach(item => {
     let text = item.innerText.toLowerCase();
     item.style.display = text.includes(input) ? "list-item" : "none";
   });
 }
 
-// ATTENDANCE
+// ATTENDANCE CALC
 function calc(sub){
   let total = document.getElementById(sub+"_total").value;
   let att = document.getElementById(sub+"_attended").value;
-
   if(total==0 || total==""){
-    alert("Invalid");
+    alert("Invalid Input");
     return;
   }
-
   let p = (att/total)*100;
   p = p.toFixed(1);
-
   let bar = document.getElementById(sub+"_bar");
   bar.style.width = p+"%";
-
-  if(p>=80) bar.style.background="green";
-  else if(p>=60) bar.style.background="orange";
-  else bar.style.background="red";
-
+  if(p>=80) bar.style.background="#1abc9c";
+  else if(p>=60) bar.style.background="#f1c40f";
+  else bar.style.background="#e74c3c";
   document.getElementById(sub+"_text").innerText = p+"%";
 }
 
@@ -288,14 +289,17 @@ window.onload = function(){
     data:{
       labels:["LADE","QP","OOP","Web Dev"],
       datasets:[{
-        label:"Marks",
-        data:[80,65,90,100],
+        label:"Marks %",
+        data:[80, 65, 90, 100],
         backgroundColor:["#3498db","#e74c3c","#2ecc71","#9b59b6"]
       }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } }
     }
   });
 };
-
 </script>
 
 </body>
