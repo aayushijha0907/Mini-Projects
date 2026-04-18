@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Advanced Transformer Virtual Lab</title>
+
+<style>
+body {
+    margin:0;
+    font-family: 'Segoe UI';
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+    text-align:center;
+}
+
+.container {
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+}
+
+.flex {
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+.card {
+    background: rgba(255,255,255,0.06);
+    padding:15px;
+    border-radius:12px;
+    width:280px;
+}
+
+input { width:100%; }
+
+canvas {
+    background:#020617;
+    border-radius:10px;
+    margin-top:15px;
+}
+
+.bulb {
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    margin:auto;
+    background:yellow;
+    opacity:0.2;
+}
+
+.fan { font-size:40px; }
+
+.good { color:#4ade80; }
+.warn { color:#facc15; }
+.bad { color:#f87171; }
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>⚡ Advanced Transformer Virtual Lab</h1>
+
+<div class="flex">
+
+<div class="card">
+<h3>Transformer Controls</h3>
+
+Np: <span id="npv">1000</span>
+<input type="range" id="np" min="500" max="2000" value="1000">
+
+Ns: <span id="nsv">100</span>
+<input type="range" id="ns" min="10" max="300" value="100">
+
+Capacitor: <span id="capv">470</span> µF
+<input type="range" id="cap" min="10" max="2000" value="470">
+
+Load: <span id="loadv">100</span> Ω
+<input type="range" id="load" min="10" max="500" value="100">
+</div>
+
+<div class="card">
+<h3>System Output</h3>
+Voltage: <span id="vout"></span><br>
+Current: <span id="current"></span><br>
+Power: <span id="power"></span><br>
+Efficiency: <span id="eff"></span><br>
+Temp: <span id="temp"></span><br>
+Status: <span id="status"></span>
+</div>
+
+</div>
+
+<div class="flex">
+
+<div class="card">
+<h3>📶 Router (12V)</h3>
+<p id="router"></p>
+</div>
+
+<div class="card">
+<h3>💻 Laptop (19V)</h3>
+<p id="laptop"></p>
+</div>
+
+<div class="card">
+<h3>📱 Phone (5V)</h3>
+<p id="phone"></p>
+</div>
+
+<div class="card">
+<h3>💡 Bulb</h3>
+<div class="bulb" id="bulb"></div>
+<p id="bulbText"></p>
+</div>
+
+<div class="card">
+<h3>🌀 Fan</h3>
+<div class="fan" id="fan">🌀</div>
+<p id="fanText"></p>
+</div>
+
+</div>
+
+<canvas id="wave" width="1000" height="200"></canvas>
+
+</div>
+
+<script>
+
+let t=0;
+
+function loop(){
+
+let np=+npEl.value;
+let ns=+nsEl.value;
+let cap=+capEl.value;
+let load=+loadEl.value;
+
+npv.innerText=np;
+nsv.innerText=ns;
+capv.innerText=cap;
+loadv.innerText=load;
+
+// Transformer
+let Vp=230;
+let Vs=Vp*(ns/np);
+
+// Rectifier
+let rect=Math.max(0,Vs-1.4);
+
+// Ripple
+let ripple = rect/(2*50*load*(cap*1e-6));
+
+// DC output
+let Vdc = rect - ripple;
+
+// Current & Power
+let current = Vdc/load;
+let power = Vdc * current;
+
+// Efficiency
+let eff = (Vdc/Vs)*100 || 0;
+
+// Temperature
+let temp = 25 + (Vs-Vdc)*1.8;
+
+// UI updates
+vout.innerText = Vdc.toFixed(1)+" V";
+currentTxt.innerText = current.toFixed(2)+" A";
+powerTxt.innerText = power.toFixed(2)+" W";
+effTxt.innerText = eff.toFixed(1)+"%";
+tempTxt.innerText = temp.toFixed(1)+"°C";
+
+// Health
+if(temp>85) status.innerHTML="<span class='bad'>Danger</span>";
+else if(eff<60) status.innerHTML="<span class='warn'>Low Efficiency</span>";
+else status.innerHTML="<span class='good'>Healthy</span>";
+
+// DEVICES
+
+// Router (12V)
+if(Vdc<10) router.innerText="No Power ❌";
+else if(Vdc<=13) router.innerText="Working ✅";
+else router.innerText="Overvoltage ⚠️";
+
+// Laptop (19V)
+if(Vdc<17) laptop.innerText="Not Charging ❌";
+else if(Vdc<=20) laptop.innerText="Charging ✅";
+else laptop.innerText="Damage Risk ⚠️";
+
+// Phone (5V)
+if(Vdc<4.5) phone.innerText="No Charge ❌";
+else if(Vdc<=5.5) phone.innerText="Charging ✅";
+else phone.innerText="Overvoltage ⚠️";
+
+// Bulb
+bulb.style.opacity=Math.min(Vdc/230,1);
+bulbText.innerText = (Vdc<100)?"Dim":(Vdc<220?"Normal":"Too Bright ⚠️");
+
+// Fan
+let speed=Math.min(Vdc*3,600);
+fan.style.transform="rotate("+t*speed+"deg)";
+fanText.innerText = (Vdc<40)?"Stopped":(Vdc<120?"Slow":(Vdc<200?"Medium":"Fast ⚡"));
+
+// Waveform
+let ctx=wave.getContext("2d");
+ctx.clearRect(0,0,1000,200);
+
+ctx.strokeStyle="#60a5fa";
+ctx.beginPath();
+
+for(let x=0;x<1000;x++){
+let rippleWave = rect*Math.exp(-(x%100)/(cap/10))*Math.sin(t+x*0.03);
+let y=150 - Math.abs(rippleWave)*0.4;
+
+if(x==0) ctx.moveTo(x,y);
+else ctx.lineTo(x,y);
+}
+ctx.stroke();
+
+ctx.strokeStyle="#4ade80";
+ctx.beginPath();
+
+for(let x=0;x<1000;x++){
+let y=150 - Vdc*0.4;
+if(x==0) ctx.moveTo(x,y);
+else ctx.lineTo(x,y);
+}
+ctx.stroke();
+
+t+=0.05;
+requestAnimationFrame(loop);
+}
+
+const npEl=document.getElementById("np");
+const nsEl=document.getElementById("ns");
+const capEl=document.getElementById("cap");
+const loadEl=document.getElementById("load");
+
+const currentTxt=document.getElementById("current");
+const powerTxt=document.getElementById("power");
+const effTxt=document.getElementById("eff");
+const tempTxt=document.getElementById("temp");
+
+loop();
+
+</script>
+
+</body>
+</html>
