@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Minecraft Chronicles | Homemade Stick & Twine Board Game</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🟩</text></svg>">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="game-header">
+        <div class="logo-container">
+            <div class="header-icon">🪵</div>
+            <div class="logo-text">
+                <h1>THE MINECRAFT CHRONICLES</h1>
+                <span class="subtitle">Homemade Stick & Twine Board Game Edition</span>
+            </div>
+        </div>
+        <div class="header-controls">
+            <button class="btn craft-btn btn-small" id="btn-speed">⏱️ 1x Speed</button>
+            <button class="btn craft-btn btn-small" id="btn-mute">🔊 Sound On</button>
+            <button class="btn craft-btn btn-small" id="btn-new-game">➕ New Game</button>
+        </div>
+    </header>
+
+    <!-- Main Game Board & Dashboard Layout -->
+    <main class="main-layout">
+        
+        <!-- Left Sidebar: Players HUD -->
+        <aside class="sidebar-left">
+            <div class="panel-title">👥 Crafters in World</div>
+            <div class="players-container" id="players-list">
+                <!-- Dynamically populated with player cards -->
+            </div>
+        </aside>
+
+        <!-- Center: Interactive Stick-Craft Board Canvas -->
+        <section class="board-container">
+            <canvas id="board-canvas" width="920" height="920"></canvas>
+        </section>
+
+        <!-- Right Sidebar: Turn Controls & Game Activity Log -->
+        <aside class="sidebar-right">
+            
+            <!-- Current Turn Banner -->
+            <div class="turn-banner-card" id="current-turn-banner">
+                <!-- Dynamically updated -->
+            </div>
+
+            <!-- Action Controls Dashboard -->
+            <div class="action-panel">
+                <button class="btn craft-btn primary" id="btn-roll">
+                    <span>🎲</span> Roll Dice
+                </button>
+                <button class="btn craft-btn" id="btn-end-turn" disabled>
+                    <span>➡️</span> End Turn
+                </button>
+                <div class="btn-group">
+                    <button class="btn craft-btn" id="btn-trade">
+                        <span>🤝</span> Trade
+                    </button>
+                </div>
+            </div>
+
+            <!-- Activity Log Ticker -->
+            <div class="log-panel">
+                <div class="log-header">📜 World Adventure Log</div>
+                <div class="log-content" id="game-log-content">
+                    <!-- Events stream here -->
+                </div>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <!-- Modal: Property Deed / Space Inspection -->
+    <div class="modal-overlay hidden" id="deed-modal"></div>
+
+    <!-- Modal: Landed Action / Property Purchase Prompt -->
+    <div class="modal-overlay hidden" id="action-modal"></div>
+
+    <!-- Modal: Lucky Block & Treasure Chest Card Reveal -->
+    <div class="modal-overlay hidden" id="card-modal"></div>
+
+    <!-- Modal: Trade & Barter Negotiation -->
+    <div class="modal-overlay hidden" id="trade-modal"></div>
+
+    <!-- Modal: Victory / Game Over -->
+    <div class="modal-overlay hidden" id="victory-modal"></div>
+
+    <!-- Modal: New Game Setup -->
+    <div class="modal-overlay hidden" id="setup-modal">
+        <div class="modal-card parchment-paper setup-modal-card">
+            <h2>🪵 Craft a New World in The Minecraft Chronicles</h2>
+            <form id="setup-form">
+                <div class="form-group">
+                    <label for="player-count">Number of Crafters:</label>
+                    <select id="player-count">
+                        <option value="2">2 Players (You vs 1 Bot)</option>
+                        <option value="3">3 Players (You vs 2 Bots)</option>
+                        <option value="4" selected>4 Players (Default: 4 Crafters)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="p1-name">Crafter 1 Name (You):</label>
+                    <input type="text" id="p1-name" value="Steve (You)" required>
+                </div>
+                <div class="form-group">
+                    <label for="p1-token">Choose Your Carved Figurine:</label>
+                    <select id="p1-token">
+                        <option value="steve" selected>Carved Steve (Cyan & Blue)</option>
+                        <option value="alex">Birch Alex (Green & Orange)</option>
+                        <option value="creeper">Twig Creeper (Carved Wood Bark)</option>
+                        <option value="pig">Clay Pig (Pink Block)</option>
+                        <option value="enderman">Charred Enderman (Purple Eyes)</option>
+                        <option value="golem">Stone Golem (Heavy Carved)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="p2-name">Crafter 2 Name:</label>
+                    <input type="text" id="p2-name" value="Alex Bot">
+                    <label style="margin-top: 6px; font-weight: normal; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                        <input type="checkbox" id="p2-is-ai" checked> AI Bot Player
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="p3-name">Crafter 3 Name:</label>
+                    <input type="text" id="p3-name" value="Creeper Bot">
+                    <label style="margin-top: 6px; font-weight: normal; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                        <input type="checkbox" id="p3-is-ai" checked> AI Bot Player
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="p4-name">Crafter 4 Name:</label>
+                    <input type="text" id="p4-name" value="Enderman Bot">
+                    <label style="margin-top: 6px; font-weight: normal; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                        <input type="checkbox" id="p4-is-ai" checked> AI Bot Player
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn craft-btn success">Start Adventure!</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Game Scripts (Correct Order of Dependencies) -->
+    <script src="js/config.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/physics.js"></script>
+    <script src="js/board_renderer.js"></script>
+    <script src="js/game_state.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>
